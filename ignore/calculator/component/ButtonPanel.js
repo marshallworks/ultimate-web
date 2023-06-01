@@ -1,5 +1,5 @@
-import { div } from '/ignore/ignore.js';
-import { Button } from '/ignore/calculator/component/Button.js';
+import { div } from '../../ignore.js';
+import { Button } from './Button.js';
 
 export const ButtonPanel = ({clickHandler}) => {
 

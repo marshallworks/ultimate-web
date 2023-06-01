@@ -1,5 +1,5 @@
-import { operate } from '/ignore/calculator/logic/operate.js';
-import { isNumber } from '/ignore/calculator/logic/isNumber.js';
+import { operate } from './operate.js';
+import { isNumber } from './isNumber.js';
 
 export function calculate(obj, buttonName) {
   if (buttonName === "AC") {

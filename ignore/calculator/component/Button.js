@@ -1,4 +1,4 @@
-import { div, button } from '/ignore/ignore.js';
+import { div, button } from '../../ignore.js';
 
 export const Button = ({name, orange, wide, clickHandler}) => {
   const handleClick = () => {

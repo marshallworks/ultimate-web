@@ -1,7 +1,7 @@
-@import url('/ignore/calculator/component/App.css');
-@import url('/ignore/calculator/component/Display.css');
-@import url('/ignore/calculator/component/Button.css');
-@import url('/ignore/calculator/component/ButtonPanel.css');
+@import url('./component/App.css');
+@import url('./component/Display.css');
+@import url('./component/Button.css');
+@import url('./component/ButtonPanel.css');
 
 html {
   height: 100%;

@@ -1,4 +1,4 @@
-import { App } from '/ignore/calculator/component/App.js';
+import { App } from './component/App.js';
 
 const root = document.getElementById('root');
 const app = App();

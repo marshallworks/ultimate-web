@@ -1,4 +1,4 @@
-import { div } from '/ignore/ignore.js';
+import { div } from '../../ignore.js';
 
 export const Display = () => {
   const valueDiv = div('0');

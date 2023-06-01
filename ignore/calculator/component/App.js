@@ -1,7 +1,7 @@
-import { div } from '/ignore/ignore.js';
-import { calculate } from '/ignore/calculator/logic/calculate.js';
-import { Display } from '/ignore/calculator/component/Display.js';
-import { ButtonPanel } from '/ignore/calculator/component/ButtonPanel.js';
+import { div } from '../../ignore.js';
+import { calculate } from '../logic/calculate.js';
+import { Display } from './Display.js';
+import { ButtonPanel } from './ButtonPanel.js';
 
 export const App = () => {
   let state = {
