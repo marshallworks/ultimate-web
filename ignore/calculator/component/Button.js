@@ -1,15 +1,18 @@
 import { div, button } from '../../ignore.js';
 
 export const Button = ({name, orange, wide, clickHandler}) => {
+
   const handleClick = () => {
     clickHandler(name);
   };
+
   const render = () => {
     const className = [
       'component-button',
       orange ? 'orange' : '',
       wide ? 'wide' : ''
     ];
+
     const clicker = button(name);
     clicker.addEventListener('click', handleClick);
 
