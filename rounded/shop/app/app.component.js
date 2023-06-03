@@ -6,8 +6,7 @@ import { HTML } from './app.component.html.js';
 export class AppComponent extends HTMLElement {
 
   connectedCallback() {
-    const base = rnd(HTML);
-    this.append(base.element);
+    this.append(rnd(HTML));
   }
 }
 

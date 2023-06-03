@@ -1,18 +1,14 @@
-const item = `
-<div class="cart-item">
-  <span>{{ itemName }} </span>
-  <span>{{ itemPrice }}</span>
-</div>
-`;
-
-const cart = `
+export const HTML = `
 <h3>Cart</h3>
 
 <p>
   <a href="#/shipping">Shipping Prices</a>
 </p>
 
-<div class="items"></div>
+<div class="cart-item" data-for="item of items">
+  <span data-text="item.name"></span>
+  <span data-text="item.price | currency"></span>
+</div>
 
 <form>
 
@@ -30,10 +26,8 @@ const cart = `
     <input id="address" type="text">
   </div>
 
-  <button class="button" type="submit">Purchase</button>
+  <button class="button" data-event="click->onSubmit">Purchase</button>
 
 </form>
 `;
-
-export const HTML = {item, cart};
 

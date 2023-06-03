@@ -14,18 +14,20 @@ export class ProductAlertsComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    const base = rnd(HTML, ['button']);
-    base.selected['button'].addEventListener('click', this.onNotify.bind(this));
     this.update();
-    this.append(base.element);
   }
 
   update() {
+    this.innerText = '';
     this.notify = this.getAttribute('notify');
     this.product = this.getAttribute('product')
         ? JSON.parse(decodeURI(this.getAttribute('product')))
         : null ;
-    this.style.display = this.product && this.product.price > 700 ? 'block' : 'none';
+    const element = rnd(HTML, {
+      'priceGreaterThan700': this.product && this.product.price > 700,
+      'onNotify': this.onNotify.bind(this)
+    });
+    this.append(element);
   }
 
   onNotify() {

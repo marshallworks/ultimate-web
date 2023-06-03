@@ -1,6 +1,6 @@
 export const HTML = `
-<p>
-  <button>Notify Me</button>
+<p data-showif="priceGreaterThan700">
+  <button data-event="click->onNotify">Notify Me</button>
 </p>
 `;
 

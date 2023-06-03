@@ -8,30 +8,25 @@ import { products } from '../products.js';
 const NOTIFY_EVENT = 'product-notify';
 
 export class ProductListComponent extends HTMLElement {
-  products = [...products];
 
   connectedCallback() {
-    const base = rnd(HTML.products, ['.products']);
-    const list = base.selected['.products'];
-    for (const product of this.products) {
-      const result = rnd(HTML.product, {
-        'linkTitle': product.name + ' details',
-        'routerLink': '#/products/' + product.id,
-        'productName': product.name,
-        'productDescription': product.description,
-        'product': encodeURI(JSON.stringify(product)),
-        'notify': NOTIFY_EVENT
-      }, ['.description', 'button', 'app-product-alerts']);
-
-      if (!product.description) {
-        result.selected['.description'].style.display = 'none';
-      }
-      result.selected['button'].addEventListener('click', this.share.bind(this));
-      result.selected['app-product-alerts'].addEventListener(NOTIFY_EVENT, this.onNotify.bind(this));
-
-      list.appendChild(result.element);
+    const productsWithLinks = [];
+    for (const product of products) {
+      productsWithLinks.push({
+        ...product,
+        link: `#/products/${product.id}`,
+        linkTitle: `${product.name} details`
+      });
     }
-    this.append(base.element);
+
+    const element = rnd(HTML, {
+      'products': productsWithLinks,
+      'notify': NOTIFY_EVENT,
+      'share': this.share.bind(this)
+    });
+
+    this.addEventListener(NOTIFY_EVENT, this.onNotify.bind(this));
+    this.append(element);
   }
 
   share() {

@@ -1,105 +1,88 @@
-export function rnd(...args) {
-  let text = '';
-  let selectors = [];
-  let vars = {};
-  for (const arg of args) {
-    if (Array.isArray(arg)) {
-      selectors = arg;
-    } else if (typeof arg === 'object') {
-      vars = arg;
-    } else {
-      text = `${arg}`;
-    }
+export const PipeProviders = (() => {
+  const providers = {};
+  const register = (key, func) => {
+    providers[key] = func;
+  };
+  const get = (key) => {
+    return providers[key];
+  };
+  return Object.freeze({register, get});
+})();
+
+function getDataPath(path, data) {
+  const parts = path.split('.');
+  let result = data;
+  for (const part of parts) {
+    result = result[part.trim()];
   }
-  for (const [varName, content] of Object.entries(vars)) {
-    text = text.replaceAll(`{{ ${varName} }}`, content);
-  }
-  const template = document.createElement('template');
-  template.innerHTML = text;
-  const element = template.content.cloneNode(true);
-  const selected = {};
-  for (const selector of selectors) {
-    const result = element.querySelectorAll(selector);
-    if (result.length === 0) {
-      selected[selector] = null;
-    } else if (result.length === 1) {
-      selected[selector] = result[0];
-    } else {
-      selected[selector] = result;
-    }
-  }
-  return {element, selected};
+  return result;
 }
 
-export class RoundedRouterService {
-  #defaultComponent = '';
-  #ids = {};
-  #routes = [];
-
-  setDefaultComponent(component) {
-    this.#defaultComponent = component;
-  }
-
-  setRoutes(routes) {
-    this.#routes = routes;
-  }
-
-  getComponent(path) {
-    const pathParts = path.split('/');
-    for (const route of this.#routes) {
-      const routeParts = route.path.split('/');
-      if (pathParts[0] === routeParts[0]) {
-        if (pathParts[1] && routeParts[1]) {
-          this.#ids[routeParts[1].replace(':', '')] = Number(pathParts[1]);
-        } else {
-          this.#ids = {};
-        }
-        return route.component;
+function process(elements, data) {
+  for (const element of elements) {
+    if ((element.dataset.showif
+         && !getDataPath(element.dataset.showif, data))
+    || (element.dataset.hideif
+         && getDataPath(element.dataset.hideif, data))) {
+      element.remove();
+      continue;
+    }
+    if (element.dataset.attr) {
+      const attribs = element.dataset.attr.split(',');
+      for (const attrib of attribs) {
+        const [attr, path] = attrib.split(':');
+        element.setAttribute(attr.trim(), getDataPath(path, data));
       }
     }
-    return this.#defaultComponent;
-  }
-
-  getId(key) {
-    return this.#ids[key];
-  }
-
-  static #isInternal = false;
-  static #instance;
-
-  static get instance() {
-    if (!RoundedRouterService.#instance) {
-      RoundedRouterService.#isInternal = true;
-      RoundedRouterService.#instance = new this();
+    if (element.dataset.text) {
+      const pipes = element.dataset.text.split('|');
+      let content = getDataPath(pipes.shift(), data);
+      for (const pipe of pipes || []) {
+        content = PipeProviders.get(pipe.trim())(content);
+      }
+      element.innerText += `${content}`;
     }
-    return RoundedRouterService.#instance;
-  }
-
-  constructor() {
-    if (!RoundedRouterService.#isInternal) {
-      throw new TypeError('RoundedRouterService is a singleton, use RoundedRouterService.instance.');
+    if (element.dataset.event) {
+      const [eventName, path] = element.dataset.event.split('->');
+      element.addEventListener(eventName.trim(), getDataPath(path, data));
     }
-    RoundedRouterService.#isInternal = false;
+    if (element.dataset.object) {
+      const path = element.dataset.object;
+      const name = path.substring(path.lastIndexOf('.') + 1).trim();
+      element.setAttribute(name, encodeURI(JSON.stringify(getDataPath(path, data))));
+    }
+    if (element.dataset.string) {
+      const path = element.dataset.string;
+      const name = path.substring(path.lastIndexOf('.') + 1).trim();
+      element.setAttribute(name, `${getDataPath(path, data)}`);
+    }
+    if (element.dataset.for) {
+      const [key, path] = element.dataset.for.split(' of ');
+      const contentArray = getDataPath(path, data);
+      delete(element.dataset.for);
+      let lastElement = element;
+      for (const content of contentArray) {
+        const nextElement = element.cloneNode(true);
+        const nextData = {...data};
+        nextData[key.trim()] = content;
+        lastElement.after(nextElement);
+        process([...nextElement.children], nextData);
+        lastElement = nextElement;
+      }
+      element.remove();
+    } else if (element.children.length) {
+      process([...element.children], data);
+    }
   }
 }
 
-export class RoundedRouter extends HTMLElement {
-  last = null;
-  router = RoundedRouterService.instance;
-
-  connectedCallback() {
-    window.addEventListener('hashchange', (event) => {
-      const path = event.currentTarget.location.hash.replace('#/', '').replace('#', '');
-      this.onNav(path);
-    });
-    this.onNav('');
-  }
-
-  onNav(path) {
-    if (this.last) this.last.remove();
-    const component = this.router.getComponent(path);
-    this.last = document.createElement(component);
-    this.after(this.last);
-  }
+export function rnd(htmlString, data) {
+  htmlString = htmlString || '';
+  data = data || {};
+  const template = document.createElement('template');
+  template.innerHTML = htmlString;
+  const element = template.content.cloneNode(true);
+  process([...element.children], data);
+  return element;
 }
 

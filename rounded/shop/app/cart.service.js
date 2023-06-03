@@ -2,23 +2,19 @@ export function currency(amount) {
   return `$${amount.toFixed(2)}`;
 }
 
-export class CartService {
-  items = [];
+export const CartService = (() => {
+  let _items = [];
 
-  addToCart(product) {
-    this.items.push(product);
+  const addToCart = (product) => _items.push(product);
+
+  const getItems = () => _items;
+
+  const clearCart = () => {
+    _items = [];
+    return _items;
   }
 
-  getItems() {
-    return this.items;
-  }
-
-  clearCart() {
-    this.items = [];
-    return this.items;
-  }
-
-  getShippingPrices() {
+  const getShippingPrices = () => {
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();
       req.onload = (e) => {
@@ -29,22 +25,6 @@ export class CartService {
     });
   }
 
-  static #isInternal = false;
-  static #instance;
-
-  static get instance() {
-    if (!CartService.#instance) {
-      CartService.#isInternal = true;
-      CartService.#instance = new this();
-    }
-    return CartService.#instance;
-  }
-
-  constructor() {
-    if (!CartService.#isInternal) {
-      throw new TypeError('CartService is a singleton, use CartService.instance.');
-    }
-    CartService.#isInternal = false;
-  }
-}
+  return Object.freeze({addToCart, getItems, clearCart, getShippingPrices});
+})();
 

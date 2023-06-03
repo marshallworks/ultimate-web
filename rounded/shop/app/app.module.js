@@ -1,4 +1,6 @@
-import { RoundedRouterService, RoundedRouter } from '../../rounded.js';
+import { RoundedRouterService, RoundedRouter } from '../../router.js';
+import { PipeProviders } from '../../rounded.js';
+import { currency } from './cart.service.js';
 import { AppComponent } from './app.component.js';
 import { TopBarComponent } from './top-bar/top-bar.component.js';
 import { ProductAlertsComponent } from './product-alerts/product-alerts.component.js';
@@ -8,8 +10,10 @@ import { CartComponent } from './cart/cart.component.js';
 import { ShippingComponent } from './shipping/shipping.component.js';
 
 export const bootstrap = () => {
-  RoundedRouterService.instance.setDefaultComponent('app-product-list');
-  RoundedRouterService.instance.setRoutes([
+  PipeProviders.register('currency', currency);
+
+  RoundedRouterService.setDefaultComponent('app-product-list');
+  RoundedRouterService.setRoutes([
     {path: '', component: 'app-product-list'},
     {path: 'products/:productId', component: 'app-product-details'},
     {path: 'cart', component: 'app-cart'},
