@@ -47,7 +47,7 @@ To use these "frameworks", you should be familiar with:
 
 And, yes, I copied those directly from the *competitors* documentation, because it's the same.
 
-However, you won't need any d*$n:
+However, you won't need any:
 
   * Build tools
   * Node.js
@@ -67,5 +67,5 @@ TypeScript LSP can help me feel wicked smart.
 Inevitably people will point out that none of the examples are a "real" app,
 even though they suffice to convince people to use the *competitors*. This
 means I may come and add more examples whenever someone points out I've clearly
-missed the point of [_insert their favorite wast of time framework here_].
+missed the point of [_insert their favorite framework here_].
 
