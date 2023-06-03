@@ -2,6 +2,19 @@
 
 Dead simple replacements for ginormous frameworks.
 
+## Core concept
+
+The web is a flawed environment for UI development. **However**, it is not the
+worst thing ever concieved for UI development, and it has improved over the
+last 30+ years. Most ginormous frameworks offer only small improvements on the
+vanilla web, yet come with performance costs, and become yet another thing to
+learn. Meaning, most of the development speed up is also never realized.
+
+Before discounting the web as it is, try the [7GUIs](https://github.com/7guis/7guis)
+with just HTML, CSS, and JS. I did [here](https://github.com/marshallworks/7GUIs).
+You may just find that it's not great, but no worse than any other framework
+for the web.
+
 ## Access Demos here:
 
 [UltimateWeb](https://marshallworks.github.io/ultimate-web/)
